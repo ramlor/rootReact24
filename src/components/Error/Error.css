@@ -1,3 +1,29 @@
- #img_error {
-    width: 100%;
+
+.error-container {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   margin: 0;
+   padding: 0;
+   background-color: #d9d9db; 
  }
+ 
+
+ #error-img {
+   max-width: 80%;  
+   max-height: 80%; 
+   object-fit: contain; 
+   border: 2px solid #ccc; 
+ }
+ 
+
+ body, html {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+ }
+ 
+ 

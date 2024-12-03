@@ -1,0 +1,62 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Contenedor principal */
+.my-user-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(128, 126, 126, 0.1);
+    text-align: center; 
+}
+
+/* Flexbox para centrar el botón y el input */
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 20px; 
+    margin-bottom: 20px;
+}
+
+/* Título */
+.my-user-container h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center; 
+}
+
+/* Input de búsqueda */
+.search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Botón de búsqueda */
+.btn-search {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #89a034;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-search:hover {
+    background-color: #707274;
+}

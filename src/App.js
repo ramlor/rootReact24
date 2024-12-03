@@ -27,6 +27,7 @@ function App() {
           <Route exact path="/page-not-faound" element={<NotFound/>} />
           <Route  path="/*" element={<Navigate to = "/page-not-faound"/>} />
         </Routes>
+        
       </BrowserRouter>
     </>
   );

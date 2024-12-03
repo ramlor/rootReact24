@@ -1,13 +1,13 @@
-import React from 'react'
-import './Error.css'
+import React from 'react';
+import './Error.css';
 
 const Error = () => {
   return (
-    <div>
-      Soy Una Pagina de error
-      <img id= "img_error" alt= "" src=""></img>
+    <div className="error-container">
+      <img id="error-img" alt="Error" src="/error500.avif" />
     </div>
-  )
+  );
 }
 
-export default Error
+export default Error;
+
