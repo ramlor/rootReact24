@@ -6,6 +6,7 @@ import './MyUser.css';
 const MyUser = () => {
     const [query, setQuery] = useState("");
     const navigate = useNavigate(); 
+    const [users, setusers] = this.state []
 
     const find = (evt) => {
         const { value } = evt.target;
@@ -36,15 +37,23 @@ const MyUser = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>
-                                <button onClick={() => banUser(1)} className='btn-ban'>Baneo</button>
-                            </td>
-                        </tr>
+                        {
+                            users.map{(users) => {
+                                return (
+                                <tr>
+                                    <td>{users.id}</td>
+                                    <td>{users.id}</td>
+                                    <td>{users.id}</td>
+                                    <td>{users.id}</td>
+                                    <td>
+                                        <button onClick={() => banUser(1)} className='btn-ban'>Baneo</button>
+                                    </td>
+                                </tr>        
+
+                                );
+                            })
+                        }
+                        
                         <tr>
                             <td>2</td>
                             <td>Jacob</td>
