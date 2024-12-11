@@ -6,7 +6,7 @@ import './MyUser.css';
 const MyUser = () => {
     const [query, setQuery] = useState("");
     const navigate = useNavigate(); 
-    const [users, setusers] = this.state []
+    const [users, setusers] = useState ([])
 
     const find = (evt) => {
         const { value } = evt.target;
@@ -38,7 +38,7 @@ const MyUser = () => {
                     </thead>
                     <tbody>
                         {
-                            users.map{(users) => {
+                            users.map ((users) => {
                                 return (
                                 <tr>
                                     <td>{users.id}</td>
