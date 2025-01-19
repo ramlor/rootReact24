@@ -13,8 +13,8 @@ const MyUser = () => {
     
     const fetchUsers = async () => {
         try{
-            setLoading(true)
-            let response = await fetch ('http://localhost:5088/users?query=${query}&page$')
+            setLoading(true);
+            let response = await fetch ('http://localhost:5156/User?query=${query}&page={page}&pageSize=10');
             let json = await response.json();
             
             setUsers(json.users);
