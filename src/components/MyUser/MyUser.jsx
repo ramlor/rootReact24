@@ -42,8 +42,8 @@ useEffect (() => {
         <div className="my-user-container">
             <div className="center-content">
                 <h1>Listado de usuarios</h1>
-                <input  type="text" value={query} onChange={find} className="search-input" placeholder="Buscar usuario" />
-                <Link to="/usuario" className="btn-search">Buscar</Link>
+                <input  type="text" value={query} onChange={find} className="search-input" placeholder="Enter id user or name user" />
+                <Link to="/usuario" className="btn-search">Search</Link>
             </div>
 
             <div className="table-container">
@@ -84,6 +84,7 @@ useEffect (() => {
                             <td>@</td>
                             <td>
                                 <button onClick={() => banUser(2)} className='btn-ban'>Baneo</button>
+                                <button onClick={() => banUser(2)} className='btn-ban'>Desbanear</button>
                             </td>
                         </tr>
                         <tr>
@@ -93,6 +94,7 @@ useEffect (() => {
                             <td>@twitter</td>
                             <td>
                                 <button onClick={() => banUser(3)} className='btn-ban'>Baneo</button>
+                                <button onClick={() => banUser(3)} className='btn-ban'>Desbanear</button>
                             </td>
                         </tr>
                     </tbody>

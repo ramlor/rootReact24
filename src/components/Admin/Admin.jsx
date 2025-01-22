@@ -28,7 +28,7 @@ const Admin = () => {
         <div className="admin-container">
             {/* Contenedor para alinear el botón "Nuevo" a la derecha */}
             <div className="btn-new-container">
-                <Link to="/admin" className="btn-new">Nuevo</Link>
+                <Link to="/admin" className="btn-new">New</Link>
             </div>
 
             {/* Input de búsqueda con ícono */}
@@ -38,7 +38,7 @@ const Admin = () => {
                     type="text"
                     value={query}
                     onChange={find}
-                    placeholder="Buscar usuario"
+                    placeholder="Search user"
                     className="search-input"
                 />
             </div>
@@ -64,8 +64,8 @@ const Admin = () => {
                                 <td></td>
                                 <td></td>
                                 <td>
-                                    <Link to="" className='btn-edit'>Editar</Link>
-                                    <Link to="" className='btn-delete'>Eliminar</Link>
+                                    <Link to="" className='btn-edit'>Edit</Link>
+                                    <Link to="" className='btn-delete'>Save</Link>
                                 </td>
                             </tr>
                             <tr>
@@ -74,8 +74,8 @@ const Admin = () => {
                                 <td></td>
                                 <td>@</td>
                                 <td>
-                                    <Link to="" className='btn-edit'>Editar</Link>
-                                    <Link to="" className='btn-delete'>Eliminar</Link>
+                                    <Link to="" className='btn-edit'>Edit</Link>
+                                    <Link to="" className='btn-delete'>Save</Link>
                                 </td>
                             </tr>
                             <tr>
@@ -84,8 +84,8 @@ const Admin = () => {
                                 <td></td>
                                 <td>@</td>
                                 <td>
-                                    <Link to="" className='btn-edit'>Editar</Link>
-                                    <Link to="" className='btn-delete'>Eliminar</Link>
+                                    <Link to="" className='btn-edit'>Edit</Link>
+                                    <Link to="" className='btn-delete'>Save</Link>
                                 </td>
                             </tr>
                         </tbody>
@@ -94,9 +94,9 @@ const Admin = () => {
             )}
 
             <div className="nav-buttons">
-                <a className='btn-new' onClick={prevPage}>Anterior</a>
+                <a className='btn-new' onClick={prevPage}>Prev</a>
                 <p>{page}</p>
-                <a className='btn-new' onClick={nextPage}>Siguiente</a>
+                <a className='btn-new' onClick={nextPage}>Next</a>
             </div>
         </div>
     );
