@@ -41,7 +41,7 @@ useEffect (() => {
     return (
         <div className="my-user-container">
             <div className="center-content">
-                <h1>Listado de usuarios</h1>
+                <h1>List of banned users</h1>
                 <input  type="text" value={query} onChange={find} className="search-input" placeholder="Enter id user or name user" />
                 <Link to="/usuario" className="btn-search">Search</Link>
             </div>
