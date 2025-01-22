@@ -50,10 +50,10 @@ useEffect (() => {
                 <Table striped bordered hover className="table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
+                            <th>id</th>
+                            <th>Startdate</th>
+                            <th>EndDate</th>
+                            <th>UserName</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -69,6 +69,7 @@ useEffect (() => {
                                     <td>
                                         <Link to='/user/{users.id}' className='btn-ban'>Baneo</Link>
                                         <button onClick={() => banUser(1)} className='btn-ban'>Baneo</button>
+                                        <button onClick={() => banUser(1)} className='btn-ban'>Desbanear</button>
                                     </td>
                                 </tr>        
 

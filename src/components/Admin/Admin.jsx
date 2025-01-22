@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
-import { ImSpinner3 } from 'react-icons/im'; 
+import { ImSpinner3, ImSearch } from 'react-icons/im'; 
 import { Link } from 'react-router-dom';
 import './Admin.css'; 
-
 
 const Admin = () => {
     const [query, setQuery] = useState("");
@@ -32,7 +31,17 @@ const Admin = () => {
                 <Link to="/admin" className="btn-new">Nuevo</Link>
             </div>
 
-            <input type="text" value={query} onChange={find} placeholder="Buscar usuario" />
+            {/* Input de búsqueda con ícono */}
+            <div className="search-container">
+                <ImSearch className="search-icon" />
+                <input
+                    type="text"
+                    value={query}
+                    onChange={find}
+                    placeholder="Buscar usuario"
+                    className="search-input"
+                />
+            </div>
 
             {loading ? (
                 <div className="spinner"><ImSpinner3 /></div>
