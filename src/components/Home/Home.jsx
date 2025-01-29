@@ -8,7 +8,7 @@ export const Home = () => {
     return (
         <div className="home-container">
             <div className="logo-container">
-                <img src="./logogris.jpg" alt="Logo" className="logo" />
+                <img src="./logosinFondo.png" alt="Logo" className="logo" />
             </div>
         </div>
     );
