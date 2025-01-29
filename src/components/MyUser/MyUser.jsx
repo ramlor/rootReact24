@@ -6,7 +6,7 @@ import { wait } from '@testing-library/user-event/dist/utils';
 
 const MyUser = () => {
     const [query, setQuery] = useState("");
-    const [page, setPage] = useState(1); 
+    const [page, setPage] = useState(1); // variable para paginar 
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate(); 
     const [users, setUsers] = useState ([]);
