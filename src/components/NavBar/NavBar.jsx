@@ -18,7 +18,7 @@ const NavBar = () => {
                        
                         <Nav.Link as={Link} to="/admin">ADMIN</Nav.Link>
                   
-                        <Nav.Link as={Link} to="/User">USUARIOS</Nav.Link>
+                        <Nav.Link as={Link} to="/User">USERS</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
