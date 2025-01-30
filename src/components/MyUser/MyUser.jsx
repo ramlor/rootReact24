@@ -5,7 +5,7 @@ import './MyUser.css';
 
 const MyUser = () => {
     const [query, setQuery] = useState("");
-    const [page, setPage] = useState(1); // variable para paginar 
+    const [page, setPage] = useState(1); 
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
