@@ -2,20 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import './MyUser.css';
-import { wait } from '@testing-library/user-event/dist/utils';
 
 const MyUser = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1); // variable para paginar 
-    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
 
     const fetchUsers = async () => {
-        try{
-            setLoading(true);
-            let response = await fetch ('http://localhost:5156/UserBan/ban?query=${query}&page={page}&pageSize=10');
+
         try {
             setLoading(true);
             let response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}`);
@@ -79,8 +75,7 @@ const MyUser = () => {
                                         <Link to='/user/{users.id}' className='btn-ban'>Baneo</Link>
                                         <button onClick={() => banUser(1)} className='btn-ban'>Baneo</button>
                                         <button onClick={() => banUser(1)} className='btn-ban'>Desbanear</button>
-                                        <Link to='/User/{user.id}' className='btn-ban'>Baneo</Link>
-                                        <button onClick={() => banUser(1)} className='btn-ban'> Baneo </button>
+                                        
                                     </td>
                                 </tr>        
 
@@ -88,26 +83,6 @@ const MyUser = () => {
                             })
                         }
                         
-                        <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td>@</td>
-                            <td>
-                                <button onClick={() => banUser(2)} className='btn-ban'>Baneo</button>
-                                <button onClick={() => banUser(2)} className='btn-ban'>Desbanear</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td>@twitter</td>
-                            <td>
-                                <button onClick={() => banUser(3)} className='btn-ban'>Baneo</button>
-                                <button onClick={() => banUser(3)} className='btn-ban'>Desbanear</button>
-                            </td>
-                        </tr>
                         
                        
                     </tbody>
