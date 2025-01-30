@@ -6,28 +6,33 @@ import { wait } from '@testing-library/user-event/dist/utils';
 
 const MyUser = () => {
     const [query, setQuery] = useState("");
-    const [page, setPage] = useState(1); 
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate(); 
-    const [users, setUsers] = useState ([]);
-    
+    const navigate = useNavigate();
+    const [users, setUsers] = useState([]);
+
     const fetchUsers = async () => {
-        try{
-            setLoading(true)
-            let response = await fetch ('http://localhost:5088/users?query=${query}&page$')
-            let json = await response.json();
+        try {
+            setLoading(true);
+            let response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}`);
             
-            setUsers(json.users);
-        }catch (e){
-            console.error("Error :", e);
-        }finally {
-            setLoading (false);
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            let json = await response.json();
+            setUsers(json);  // Asegúrate de que el backend devuelve una lista
+        } catch (e) {
+            console.error("Error:", e);
+        } finally {
+            setLoading(false);
         }
     };
+    
 
-useEffect (() => {    
-    fetchUsers();
-},[page, query]);
+    useEffect(() => {
+        fetchUsers();
+    }, [page, query]);
 
     const find = (evt) => {
         const { value } = evt.target;
@@ -59,16 +64,16 @@ useEffect (() => {
                     </thead>
                     <tbody>
                         {
-                            users.map ((users) => {
+                            users.map ((user) => {
                                 return (
-                                <tr>
-                                    <td>{users.id}</td>
-                                    <td>{users.Name}</td>
-                                    <td>{users.LastName}</td>
-                                    <td>{users.Mail}</td>
+                                <tr key={user.id}>
+                                    <td>{user.id}</td>
+                                    <td>{user.name}</td>
+                                    <td>{user.lastName}</td>
+                                    <td>{user.mail}</td>
                                     <td>
-                                        <Link to='/user/{users.id}' className='btn-ban'>Baneo</Link>
-                                        <button onClick={() => banUser(1)} className='btn-ban'>Baneo</button>
+                                        <Link to='/User/{user.id}' className='btn-ban'>Baneo</Link>
+                                        <button onClick={() => banUser(1)} className='btn-ban'> Baneo </button>
                                     </td>
                                 </tr>        
 
@@ -76,24 +81,8 @@ useEffect (() => {
                             })
                         }
                         
-                        <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td>@</td>
-                            <td>
-                                <button onClick={() => banUser(2)} className='btn-ban'>Baneo</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td>@twitter</td>
-                            <td>
-                                <button onClick={() => banUser(3)} className='btn-ban'>Baneo</button>
-                            </td>
-                        </tr>
+                        
+                       
                     </tbody>
                 </Table>
             </div>
