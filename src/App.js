@@ -8,6 +8,7 @@ import MyUser from './components/MyUser/MyUser';
 import NotFound from './components/NotFound/NotFound';
 import Error from './components/Error/Error';
 import Admin from './components/Admin/Admin';
+import NewAdminUser from './components/Admin/NewAdminUser';
 import React from 'react';
 import './components/Home/home.css'
 
@@ -24,6 +25,7 @@ function App() {
           <Route exact path="/User/:userName" element={<MyUser/>} />
           <Route exact path="/error" element={<Error/>} />
           <Route exact path="/admin" element={<Admin/>} />
+          <Route exact path="/admin/new" element={<NewAdminUser/>} />
           <Route exact path="/page-not-faound" element={<NotFound/>} />
           <Route  path="/*" element={<Navigate to = "/page-not-faound"/>} />
         </Routes>
