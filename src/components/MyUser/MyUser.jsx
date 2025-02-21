@@ -14,7 +14,7 @@ const MyUser = () => {
 
         try {
             setLoading(true);
-            let response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}`);
+            let response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}&isAdmin=false`);
             
             if (!response.ok) {
                 throw new Error(`Error HTTP: ${response.status}`);

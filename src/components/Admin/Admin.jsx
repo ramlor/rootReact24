@@ -43,30 +43,34 @@ const Admin = () => {
 
     const deleteUser = async (id) => {
         if (!window.confirm('¿Estás seguro de que deseas bloquear este usuario?')) return;
-
+    
         try {
             const response = await fetch(`http://localhost:5156/User/${id}`, {
                 method: 'DELETE',
             });
-
+    
             if (!response.ok) {
                 const errorData = await response.json();
                 alert(`Error: ${errorData.message}`);
                 return;
             }
-
+    
             alert('Usuario bloqueado correctamente.');
-            // Refrescar la lista después de borrar
-            setUsers(users.filter(user => user.id !== id));
+    
+            // Actualizar la lista de usuarios (en lugar de eliminarlo completamente, solo lo bloqueamos)
+            setUsers(users.map(user => 
+                user.id === id ? { ...user, isAdmin: true, userStatus: 'bloqueado' } : user
+            ));
         } catch (error) {
             console.error('Error al eliminar el usuario:', error);
         }
     };
+    
 
     return (
         <div className="admin-container">
             <div className="btn-new-container">
-                <Link to="http://localhost:5156/User/new" className="btn-new">New</Link>
+                <Link to="/admin/new" className="btn-new">New</Link>
             </div>
 
             <div className="search-container">
