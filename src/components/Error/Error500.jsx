@@ -1,5 +1,6 @@
+
 import React from 'react';
-import './Error.css';
+import './Error500.css';
 
 const Error = () => {
   return (
@@ -7,7 +8,6 @@ const Error = () => {
       <img id="error-img" alt="Error" src="/error500.avif" />
     </div>
   );
-}
+};
 
-export default Error;
-
+export default Error; 

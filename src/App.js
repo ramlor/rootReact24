@@ -6,7 +6,7 @@ import { Home } from './components/Home/Home';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MyUser from './components/MyUser/MyUser';
 import NotFound from './components/NotFound/NotFound';
-import Error from './components/Error/Error';
+import Error from './components/Error/Error500';
 import Admin from './components/Admin/Admin';
 import NewAdminUser from './components/Admin/NewAdminUser';
 import React from 'react';

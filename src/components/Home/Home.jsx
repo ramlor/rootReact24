@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './home.css';
-
 import { Modal, Button } from 'react-bootstrap';
 
 export const Home = () => {
@@ -12,6 +11,7 @@ export const Home = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    
 
     useEffect(() => {
         const loggedIn = localStorage.getItem('isLoggedIn');
@@ -64,6 +64,7 @@ export const Home = () => {
             }
         } catch (err) {
             setError('Error de red o servidor');
+          
         }
     };
 
@@ -121,6 +122,7 @@ export const Home = () => {
                     <div></div>
                 )}
             </div>
+
         </div>
     );
 };
