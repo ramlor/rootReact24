@@ -1,11 +1,8 @@
 import React from 'react';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
 import './NavBar.css';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; 
+import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
     return (
@@ -15,9 +12,18 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                       
-                        <Nav.Link as={Link} to="/admin">ADMIN</Nav.Link>
-                  
+                        {/* Opción ADMIN con submenú usando Bootstrap Dropdown */}
+                        <Dropdown>
+                            <Dropdown.Toggle variant="link" id="dropdown-admin" className="text-dark">
+                                ADMIN
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item as={Link} to="/admin/abm">AMB</Dropdown.Item>
+                                <Dropdown.Item as={Link} to="/admin/baneed">BANNED</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+
+                        {/* Opción USERS */}
                         <Nav.Link as={Link} to="/User">USERS</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
@@ -27,3 +33,6 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+
+

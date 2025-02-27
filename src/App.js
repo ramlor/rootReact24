@@ -1,33 +1,37 @@
 import './App.css';
 import NavBar from './components/NavBar/NavBar';
 import { Home } from './components/Home/Home';
-
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import MyUser from './components/MyUser/MyUser';
+import MyUser  from './components/MyUser/MyUser'; 
 import NotFound from './components/NotFound/NotFound';
 import Error from './components/Error/Error500';
-import Admin from './components/Admin/Admin';
+import AdminEdit from './components/Admin/AdminEdit'; 
+import AdminList from './components/Admin/AdminList'; 
+import AdminBannedList from './components/Admin/AdminBannedList';
 import NewAdminUser from './components/Admin/NewAdminUser';
-import React from 'react';
-import './components/Home/home.css'
+import './components/Home/home.css';
+import './App.css';
 
-
-function App() {
+const App = () => {
   return (
     <>
       <BrowserRouter>
         <NavBar />
-
+        
         <Routes>
-          <Route exact path="/" element={<Home/>} />
-          <Route exact path="/User" element={<MyUser/>} />
-          <Route exact path="/User/:userName" element={<MyUser/>} />
+          <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/User" element={<MyUser/>}/>
+          <Route exact path="/User/:userName" element={<MyUser/>}/>
           <Route exact path="/error" element={<Error/>} />
-          <Route exact path="/admin" element={<Admin/>} />
-          <Route exact path="/admin/new" element={<NewAdminUser/>} />
-          <Route exact path="/page-not-faound" element={<NotFound/>} />
-          <Route  path="/*" element={<Navigate to = "/page-not-faound"/>} />
+          <Route exact path="/admin/new" element={<NewAdminUser/>}/>
+          <Route exact path="/admin/edit/:id" element={<AdminEdit/>}/>
+      
+          <Route exact path="/admin/ABM" element={<AdminList/>} />
+          <Route exact path="/admin/banned" element={<AdminBannedList/>}/>
+
+          <Route exact path="/page-not-found" element={<NotFound/>}/>
+          <Route exact path="/*" element={<Navigate to="/page-not-found"/>}/>
+
         </Routes>
         
       </BrowserRouter>
@@ -36,4 +40,8 @@ function App() {
 }
 
 export default App;
+
+
+
+
 

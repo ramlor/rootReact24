@@ -60,3 +60,23 @@ body {
 .btn-search:hover {
     background-color: #707274;
 }
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-pagination {
+    background-color: #89a034;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.btn-pagination:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

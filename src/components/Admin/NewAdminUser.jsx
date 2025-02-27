@@ -28,7 +28,8 @@ const NewAdminUser = () => {
             }
 
             alert('Usuario creado correctamente.');
-            navigate('/admin');
+            navigate('/admin/ABM');
+
         } catch (error) {
             console.error('Error creando usuario:', error);
         }
@@ -42,8 +43,12 @@ const NewAdminUser = () => {
             <input value={mail} onChange={e => setMail(e.target.value)} placeholder="Email" required />
             <input value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" type="password" required />
             <button type="submit">Crear</button>
+            <button type="button" onClick={() => navigate('/admin/ABM')}> Volver </button>
         </form>
     );
 };
 
 export default NewAdminUser;
+
+
+

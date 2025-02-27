@@ -48,25 +48,43 @@ export const Home = () => {
                     password: password
                 }),
             });
-
+    
             const data = await response.json();
             
             if (response.ok) {
-                setIsLoggedIn(true);
-                setIsAdmin(data.isAdmin);
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('isAdmin', data.isAdmin);
-                localStorage.setItem('userId', data.id);
-
-                handleClose();
+                if (data.isAdmin) {
+                    // Si es administrador, permitir el login
+                    setIsLoggedIn(true);
+                    setIsAdmin(true);
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('userId', data.id);
+    
+                    handleClose(); // Cerrar el modal de inicio de sesión
+                } else {
+                    // Si no es administrador, mostrar mensaje de error y resetear campos
+                    setError('No tienes permisos de administrador para iniciar sesión.');
+                    setEmail(''); // Limpiar el campo de email
+                    setPassword(''); // Limpiar el campo de contraseña
+                    setShowModal(true); // Mantener o volver a mostrar el modal
+                }
             } else {
+                // Error en la respuesta del servidor
                 setError(data.message || 'Error en el inicio de sesión');
+                setEmail(''); // Limpiar campos en caso de error
+                setPassword('');
+                setShowModal(true); // Mostrar el modal nuevamente
             }
         } catch (err) {
+            // Error en la conexión al servidor o de red
             setError('Error de red o servidor');
-          
+            setEmail(''); // Limpiar campos en caso de error
+            setPassword('');
+            setShowModal(true); // Mostrar el modal nuevamente
         }
     };
+    
+    
 
     return (
         <div className="home-container">
