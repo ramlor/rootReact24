@@ -2,8 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 import { Link } from 'react-router-dom';
-
-import './AdminList.css';
+import './Global.css'; // Importando el archivo renombrado
 
 const AdminList = () => {
     const [query, setQuery] = useState("");
@@ -32,10 +31,9 @@ const AdminList = () => {
         fetchAdmins();
     }, [fetchAdmins]); // Ahora está incluida 'fetchAdmins' en las dependencias
 
-    const addAdmin = (newAdmin) => {
+    /*const addAdmin = (newAdmin) => {
         setUsers((prevUsers) => [...prevUsers, newAdmin]);
-    };
-    
+    };*/
     
     const handleSearchChange = (evt) => {
         setQuery(evt.target.value);
