@@ -14,7 +14,7 @@ const MyUser = () => {
     const fetchUsers = useCallback(async () => {
         setLoading(true);
         try {
-    HEAD
+<<<<<<< HEAD
             const encodedQuery = encodeURIComponent(query);
             const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=10&isAdmin=false`);
             if (!response.ok) throw new Error('Error fetching data');
@@ -23,7 +23,8 @@ const MyUser = () => {
         } catch (error) {
             console.error('Error fetching non-admin users:', error);
         } finally {
-            setLoading(false)
+            setLoading(false);
+=======
             // Filtramos para obtener solo usuarios que no son administradores (isAdmin=false)
             let response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}&isAdmin=false`);
             
@@ -38,7 +39,7 @@ const MyUser = () => {
         } catch (e) {
             console.error("Error:", e);
             setUsers([]);
-
+>>>>>>> 43d99e6f0969b74dc3fbfb7e82078dd364238465
         }
     }, [query, page]);
 

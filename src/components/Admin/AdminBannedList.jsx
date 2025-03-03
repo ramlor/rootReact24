@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
+import './Global.css'; 
 
 const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
     const [loading, setLoading] = useState(false);
@@ -48,7 +49,7 @@ const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Email</th>
-                                <th>Fecha Nacimiento</th>
+                                <th>Rason</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -60,7 +61,7 @@ const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
                                         <td>{user.name}</td>
                                         <td>{user.lastName}</td>
                                         <td>{user.mail}</td>
-                                        <td>{user.birthdate}</td>
+                                        <td>{user.reason}</td>
                                         <td>
                                             {/* Desbaneamos usando el Id del baneo */}
                                             <button onClick={() => unbanAdmin(user.id)} className="btn-unban">
