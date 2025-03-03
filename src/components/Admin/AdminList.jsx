@@ -2,13 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
 import './Global.css'; // Importando el archivo renombrado
-=======
 import BannedAdminList from './AdminBannedList'; // Importamos el componente para la lista de baneados
 
-import './AdminList.css';
->>>>>>> 43d99e6f0969b74dc3fbfb7e82078dd364238465
+
 
 const AdminList = () => {
     const [query, setQuery] = useState("");
@@ -67,13 +64,8 @@ const AdminList = () => {
 
     /*const addAdmin = (newAdmin) => {
         setUsers((prevUsers) => [...prevUsers, newAdmin]);
-<<<<<<< HEAD
     };*/
     
-=======
-    };
-
->>>>>>> 43d99e6f0969b74dc3fbfb7e82078dd364238465
     const handleSearchChange = (evt) => {
         setQuery(evt.target.value);
     };
