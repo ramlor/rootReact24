@@ -14,6 +14,7 @@ const MyUser = () => {
     const fetchUsers = useCallback(async () => {
         setLoading(true);
         try {
+<<<<<<< HEAD
             const encodedQuery = encodeURIComponent(query);
             const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=10&isAdmin=false`);
             if (!response.ok) throw new Error('Error fetching data');
@@ -23,6 +24,22 @@ const MyUser = () => {
             console.error('Error fetching non-admin users:', error);
         } finally {
             setLoading(false);
+=======
+            // Filtramos para obtener solo usuarios que no son administradores (isAdmin=false)
+            let response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}&isAdmin=false`);
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            let json = await response.json();
+
+            setUsers(json);  // Ajusta esto según el formato de respuesta de tu backend
+            setTotalPages(json.totalPages);  // Obtén el total de páginas desde el backend
+        } catch (e) {
+            console.error("Error:", e);
+            setUsers([]);
+>>>>>>> 43d99e6f0969b74dc3fbfb7e82078dd364238465
         }
     }, [query, page]);
 
