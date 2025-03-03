@@ -1,5 +1,5 @@
-:root {
-    --primary-color: #89a034;
+:root { 
+    --primary-color: #89a034; /* Color principal para todos los botones */
 }
 
 /* Contenedor principal */
@@ -36,14 +36,18 @@ body {
 
 /* Botón de búsqueda */
 .btn-search,
-.nav-buttons .btn-new {
+.nav-buttons .btn-new,
+.table td .btn, /* Estilo para los botones dentro de las filas de la tabla */
+.btn-new {
     padding: 10px 20px;
-    background-color: var(--primary-color);
+    background-color: var(--primary-color); /* Usando la variable --primary-color */
     color: #fff;
     border-radius: 4px;
     cursor: pointer;
-    border: none; /* Eliminar borde */
+    border: none;
     text-align: center;
+    text-decoration: none; /* Sin subrayado en los botones de tipo enlace */
+    display: inline-block;
 }
 
 /* Botones de navegación */
@@ -80,11 +84,6 @@ body {
     text-align: center;
 }
 
-/* Estilo para los botones dentro de las filas */
-.table td .btn {
-    margin-left: 10px;
-}
-
 /* Alineación de botones dentro de las filas */
 .table td:last-child {
     display: flex;
@@ -104,12 +103,16 @@ body {
 
 /* Estilo al pasar el cursor sobre los botones (hover) */
 .btn-search:hover,
-.nav-buttons .btn-new:hover {
-    background-color: #7a8f27; /* Verde más oscuro */
+.btn-new:hover,
+.nav-buttons .btn-new:hover,
+.table td .btn:hover {
+    background-color: #7a8f27; /* Un color más oscuro para el hover */
 }
 
 /* Eliminar el borde al enfocar el botón */
 .btn-search:focus,
-.nav-buttons .btn-new:focus {
+.btn-new:focus,
+.nav-buttons .btn-new:focus,
+.table td .btn:focus {
     outline: none;
 }

@@ -30,7 +30,6 @@ body {
     font-size: 2.5rem;
     color: #333;
     margin-bottom: 20px;
-    text-align: center; 
 }
 
 /* Input de búsqueda */
@@ -60,6 +59,27 @@ body {
 .btn-search:hover {
     background-color: #707274;
 }
+
+/* Botones de "Ban" y "Unban" */
+.btn-ban,
+.btn-unban {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #89a034;  /* Usamos el mismo color que el resto de botones */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.btn-ban:hover,
+.btn-unban:hover {
+    background-color: #707274;  /* Color más oscuro en hover */
+}
+
+/* Controles de paginación */
 .pagination-controls {
     display: flex;
     justify-content: center;
@@ -76,7 +96,12 @@ body {
     cursor: pointer;
 }
 
+.btn-pagination:hover {
+    background-color: #707274;
+}
+
 .btn-pagination:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
