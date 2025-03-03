@@ -20,10 +20,12 @@ const MyUser = () => {
             }
             
             let json = await response.json();
-            setUsers(json.users);  // Ajusta esto según el formato de respuesta de tu backend
+
+            setUsers(json);  // Ajusta esto según el formato de respuesta de tu backend
             setTotalPages(json.totalPages);  // Obtén el total de páginas desde el backend
         } catch (e) {
             console.error("Error:", e);
+            setUsers([]);
         }
     }, [page, query]);  // useCallback memoriza esta función
 
