@@ -21,7 +21,7 @@ const AdminList = () => {
             if (!response.ok) throw new Error('Error fetching banned admins');
             
             const data = await response.json();
-            console.log("Usuarios baneados desde el backend:", data);
+            //console.log("Usuarios baneados desde el backend:", data);
     
             // Obtener detalles de cada usuario baneado
             const usersWithDetails = await Promise.all(

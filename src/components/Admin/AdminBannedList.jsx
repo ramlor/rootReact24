@@ -9,23 +9,32 @@ const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
     // Función para desbanear un administrador, usando el Id del baneo
     const unbanAdmin = async (id) => {
         try {
+            
             setLoading(true);
 
-            console.log("Desbaneando banId:", id); // Verifica que se está enviando correctamente
+            console.log("Lista de baneados antes de desbanear:", bannedAdmins);
+            
+            const bannedUser = bannedAdmins.find(user => user.id === id);
+            if (!bannedUser) {
+                console.error("Error: No se encontró el usuario baneado con ese ID.");
+                return;
+            }
+
+            console.log("Desbaneando banId:", bannedUser.id)
 
             const response = await fetch(`http://localhost:5156/UserBan/unlock/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             });
-
-            if (!response.ok) throw new Error('Error al desbanear el usuario');
-
-            // Encuentra el administrador baneado usando el Id del baneo
-            const unbannedAdmin = bannedAdmins.find(user => user.id === id);
-
-            // Elimina del estado de baneados y lo agrega a los administradores
-            setBannedAdmins(prevBanned => prevBanned.filter(user => user.id !== id));
-            setUsers(prevUsers => [...prevUsers, unbannedAdmin]);
+            
+            const unbannedAdmin = bannedAdmins.find(user => user.id === bannedUser.id);
+            
+            setBannedAdmins(prevBanned => prevBanned.filter(user => user.id !== bannedUser.id));
+            if (unbannedAdmin) {
+                // Agrega al usuario desbaneado a la lista de usuarios
+                setUsers((prevUsers) => [...prevUsers, { ...unbannedAdmin }]);
+            }
+            
 
         } catch (error) {
             console.error('Error al desbanear:', error);
@@ -56,8 +65,7 @@ const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
                         <tbody>
                             {bannedAdmins.length > 0 ? (
                                 bannedAdmins.map((user, index) => (
-                                    <tr key={user.id}>
-                                        <td>{index + 1}</td>
+                                    <tr key={`${user.id}-${index}`}>
                                         <td>{user.name}</td>
                                         <td>{user.lastName}</td>
                                         <td>{user.mail}</td>
