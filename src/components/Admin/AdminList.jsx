@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 import { Link } from 'react-router-dom';
-import './Global.css'; // Importando el archivo renombrado
+import '../../style/Global.css'; // Importando el archivo renombrado
 import BannedAdminList from './AdminBannedList'; // Importamos el componente para la lista de baneados
 
 
@@ -17,7 +17,7 @@ const AdminList = () => {
     // Definir fetchBannedAdmins antes de que se use en useEffect
     const fetchBannedAdmins = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=10');
+            const response = await fetch('http://localhost:5156/UserBan?page=${page}&pageSize=10');
             if (!response.ok) throw new Error('Error fetching banned admins');
             
             const data = await response.json();
@@ -62,9 +62,6 @@ const AdminList = () => {
         fetchBannedAdmins();
     }, [fetchAdmins, fetchBannedAdmins]);
 
-    /*const addAdmin = (newAdmin) => {
-        setUsers((prevUsers) => [...prevUsers, newAdmin]);
-    };*/
     
     const handleSearchChange = (evt) => {
         setQuery(evt.target.value);

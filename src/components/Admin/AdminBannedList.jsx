@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
-import './Global.css'; 
+ 
 
 const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
     const [loading, setLoading] = useState(false);
