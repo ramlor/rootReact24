@@ -129,11 +129,11 @@ const AdminList = () => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
                                 <th>Email</th>
                                 <th>FechaNacimiento</th>
-                                <th>Actions</th>
+                                <th>Accion</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -156,9 +156,9 @@ const AdminList = () => {
             )}
 
             <div className="nav-buttons">
-                <button className="btn-new" onClick={prevPage}>Prev</button>
+                <button className="btn-new" onClick={prevPage}>Anterior</button>
                 <p>{page}</p>
-                <button className="btn-new" onClick={nextPage}>Next</button>
+                <button className="btn-new" onClick={nextPage}>Siguiente</button>
             </div>
 
             <BannedAdminList bannedAdmins={bannedAdmins} setBannedAdmins={setBannedAdmins} setUsers={setUsers} />

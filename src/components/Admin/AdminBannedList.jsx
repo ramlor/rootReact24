@@ -46,11 +46,11 @@ const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
                                 <th>Email</th>
-                                <th>Rason</th>
-                                <th>Actions</th>
+                                <th>Motivo</th>
+                                <th>Accion</th>
                             </tr>
                         </thead>
                         <tbody>
