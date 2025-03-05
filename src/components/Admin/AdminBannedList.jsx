@@ -1,40 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
-import './Global.css'; 
+import '../../styles/Global.css';
 
 const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
     const [loading, setLoading] = useState(false);
 
-    // Función para desbanear un administrador, usando el Id del baneo
     const unbanAdmin = async (id) => {
         try {
-            
             setLoading(true);
 
-            console.log("Lista de baneados antes de desbanear:", bannedAdmins);
-            
             const bannedUser = bannedAdmins.find(user => user.id === id);
             if (!bannedUser) {
                 console.error("Error: No se encontró el usuario baneado con ese ID.");
                 return;
             }
 
-            console.log("Desbaneando banId:", bannedUser.id)
-
-            const response = await fetch(`http://localhost:5156/UserBan/unlock/${id}`, {
+            await fetch(`http://localhost:5156/UserBan/unlock/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             });
-            
-            const unbannedAdmin = bannedAdmins.find(user => user.id === bannedUser.id);
-            
+
             setBannedAdmins(prevBanned => prevBanned.filter(user => user.id !== bannedUser.id));
-            if (unbannedAdmin) {
-                // Agrega al usuario desbaneado a la lista de usuarios
-                setUsers((prevUsers) => [...prevUsers, { ...unbannedAdmin }]);
-            }
-            
+            setUsers(prevUsers => [...prevUsers, { ...bannedUser }]);
 
         } catch (error) {
             console.error('Error al desbanear:', error);
@@ -71,7 +59,6 @@ const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
                                         <td>{user.mail}</td>
                                         <td>{user.reason}</td>
                                         <td>
-                                            {/* Desbaneamos usando el Id del baneo */}
                                             <button onClick={() => unbanAdmin(user.id)} className="btn-unban">
                                                 Desbanear
                                             </button>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+import '../../styles/Global.css';
 
 const AdminForm = () => {
     const { id } = useParams(); // Para obtener el ID del usuario si estamos editando

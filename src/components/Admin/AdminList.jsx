@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 import { Link } from 'react-router-dom';
-import './Global.css'; // Importando el archivo renombrado
+import '../../styles/Global.css';
+
 import BannedAdminList from './AdminBannedList'; // Importamos el componente para la lista de baneados
 
 

@@ -1,4 +1,77 @@
+:root { 
+    --primary-color: #89a034; /* Color principal para todos los botones */
+}
+
+/* Contenedor principal */
+.admin-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(128, 126, 126, 0.1);
+}
+
+/* Estilos generales */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f8f9fa;
+}
+
+
+
+
+
+
+
+/* Tabla */
+.table-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+}
+
+/* Estilo para celdas de tabla */
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Alineación de botones dentro de las filas */
+.table td:last-child {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Spinner */
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 2rem;
+    color: #bcdb49;
+}
+
+/* Estilo al pasar el cursor sobre los botones (hover) */
+.btn-search:hover,
+.btn-new:hover,
+.nav-buttons .btn-new:hover,
+.table td .btn:hover {
+    background-color: #7a8f27; /* Un color más oscuro para el hover */
+}
+
+/* Eliminar el borde al enfocar el botón */
+.btn-search:focus,
+.btn-new:focus,
+.nav-buttons .btn-new:focus,
+.table td .btn:focus {
+    outline: none;
 }
