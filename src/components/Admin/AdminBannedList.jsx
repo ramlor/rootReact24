@@ -1,40 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
- 
 
 const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
     const [loading, setLoading] = useState(false);
 
     // Función para desbanear un administrador, usando el Id del baneo
-    const unbanAdmin = async (id) => {
+    const unbanAdmin = async (banId) => {
         try {
-            
             setLoading(true);
 
             console.log("Lista de baneados antes de desbanear:", bannedAdmins);
-            
-            const bannedUser = bannedAdmins.find(user => user.id === id);
+
+            const bannedUser = bannedAdmins.find(user => user.id === banId);
             if (!bannedUser) {
                 console.error("Error: No se encontró el usuario baneado con ese ID.");
                 return;
             }
 
-            console.log("Desbaneando banId:", bannedUser.id)
+            console.log("Desbaneando banId:", banId);
 
-            const response = await fetch(`http://localhost:5156/UserBan/unlock/${id}`, {
+            const response = await fetch(`http://localhost:5156/UserBan/unlock/${banId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             });
-            
-            const unbannedAdmin = bannedAdmins.find(user => user.id === bannedUser.id);
-            
-            setBannedAdmins(prevBanned => prevBanned.filter(user => user.id !== bannedUser.id));
-            if (unbannedAdmin) {
-                // Agrega al usuario desbaneado a la lista de usuarios
-                setUsers((prevUsers) => [...prevUsers, { ...unbannedAdmin }]);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al desbanear el usuario: ${errorText}`);
             }
-            
+
+            setBannedAdmins(prevBanned => prevBanned.filter(user => user.id !== banId));
+            setUsers(prevUsers => [...prevUsers, bannedUser]);
+
+            console.log(`Usuario con ID ${banId} desbaneado con éxito`);
 
         } catch (error) {
             console.error('Error al desbanear:', error);
@@ -59,19 +58,19 @@ const AdminBannedList = ({ bannedAdmins, setBannedAdmins, setUsers }) => {
                                 <th>Apellido</th>
                                 <th>Email</th>
                                 <th>Motivo</th>
-                                <th>Accion</th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
                             {bannedAdmins.length > 0 ? (
                                 bannedAdmins.map((user, index) => (
                                     <tr key={`${user.id}-${index}`}>
+                                        <td>{index + 1}</td>
                                         <td>{user.name}</td>
                                         <td>{user.lastName}</td>
                                         <td>{user.mail}</td>
                                         <td>{user.reason}</td>
                                         <td>
-                                            {/* Desbaneamos usando el Id del baneo */}
                                             <button onClick={() => unbanAdmin(user.id)} className="btn-unban">
                                                 Desbanear
                                             </button>

@@ -17,7 +17,7 @@ const AdminList = () => {
     // Definir fetchBannedAdmins antes de que se use en useEffect
     const fetchBannedAdmins = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:5156/UserBan?page=${page}&pageSize=10');
+            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=10');
             if (!response.ok) throw new Error('Error fetching banned admins');
             
             const data = await response.json();
@@ -45,7 +45,7 @@ const AdminList = () => {
         setLoading(true);
         try {
             const encodedQuery = encodeURIComponent(query);
-            const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=10&isAdmin=true`);
+            const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=1&pageSize=10&isAdmin=true`);
             if (!response.ok) throw new Error('Error fetching data');
             const data = await response.json();
             setUsers(data);
@@ -82,24 +82,35 @@ const AdminList = () => {
 
     // Función para banear un administrador
     const banAdmin = async (userId) => {
+        const requestBody = {
+            StartDateTime: new Date().toISOString(), // Fecha actual en formato ISO
+            EndDateTime: null, // Ajusta según sea necesario
+            Reason: "Violación de términos" // Ajusta el motivo según corresponda
+        };
+    
+        console.log("Datos enviados al backend:", requestBody); // Debug
+    
         try {
             const response = await fetch(`http://localhost:5156/UserBan/ban/${userId}`, {
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId })
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(requestBody)
             });
     
-            if (!response.ok) throw new Error('Error al banear el usuario');
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al banear el usuario: ${errorText}`);
+            }
     
-            const bannedAdmin = users.find(user => user.id === userId);
-    
-            setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-            setBannedAdmins(prevBanned => [...prevBanned, bannedAdmin]);
-    
+            console.log(`Usuario ${userId} baneado con éxito`);
         } catch (error) {
-            console.error('Error al banear:', error);
+            console.error("Error al banear:", error);
         }
     };
+    
 
     return (
         <div className="admin-list-container">
