@@ -18,6 +18,42 @@
     object-fit: contain; 
     animation: spin 5s ease-out 1 forwards;
 }
+@media  (min-width:300px) and (max-width:600px) {
+    .home-container{
+        display: flex;
+        justify-content: space-around;
+    }
+    .logo {
+        width: 90%;
+    }
+    .logo-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content:first baseline
+    }
+
+    .login-container{
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        justify-content: center;
+        margin-right: 20px;
+    }
+    .btn-danger{
+        width: 95%;
+        height: 5%;
+    }
+    h2 {
+        font-size: 5vw; 
+    }
+      
+    .login-container p{
+        font-size: 3vw; 
+    }
+      
+
+}
 
 /* Animación de giro */
 @keyframes spin {
