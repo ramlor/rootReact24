@@ -2,53 +2,24 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 import { Link } from 'react-router-dom';
-
-import BannedAdminList from './AdminBannedList'; // Importamos el componente para la lista de baneados
-
-
+import BannedAdminList from './AdminBannedList';
 
 const AdminList = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
-    const [bannedAdmins, setBannedAdmins] = useState([]); // Estado para los baneados
+    const [bannedAdmins, setBannedAdmins] = useState([]);
 
-    // Definir fetchBannedAdmins antes de que se use en useEffect
-    const fetchBannedAdmins = useCallback(async () => {
-        try {
-            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=10');
-            if (!response.ok) throw new Error('Error fetching banned admins');
-            
-            const data = await response.json();
-            //console.log("Usuarios baneados desde el backend:", data);
-    
-            // Obtener detalles de cada usuario baneado
-            const usersWithDetails = await Promise.all(
-                data.data.map(async (ban) => {
-                    const userResponse = await fetch(`http://localhost:5156/User/${ban.userId}`);
-                    if (!userResponse.ok) return { ...ban, name: "Desconocido", lastName: "", mail: "", birthdate: "" };
-                    
-                    const userData = await userResponse.json();
-                    return { ...ban, ...userData };
-                })
-            );
-    
-            setBannedAdmins(usersWithDetails);
-        } catch (error) {
-            console.error('Error fetching banned admins:', error);
-        }
-    }, []);
-
-    // Usamos useCallback para memorizar la función
+    // Obtener lista de administradores
     const fetchAdmins = useCallback(async () => {
         setLoading(true);
         try {
             const encodedQuery = encodeURIComponent(query);
-            const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=1&pageSize=10&isAdmin=true`);
-            if (!response.ok) throw new Error('Error fetching data');
+            const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=10&isAdmin=true`);
+            if (!response.ok) throw new Error('Error fetching admin users');
             const data = await response.json();
-            setUsers(data);
+            setUsers(data.data || data);
         } catch (error) {
             console.error('Error fetching admin users:', error);
         } finally {
@@ -56,13 +27,44 @@ const AdminList = () => {
         }
     }, [query, page]);
 
-    // Llama a fetchAdmins y fetchBannedAdmins cada vez que cambian 'query' o 'page'
+    // Obtener lista de administradores baneados
+    const fetchBannedAdmins = useCallback(async () => {
+        try {
+            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=10');
+            if (!response.ok) throw new Error('Error fetching banned admins');
+
+            const data = await response.json();
+
+            // Obtener detalles de cada usuario baneado
+            const usersWithDetails = await Promise.all(
+                data.data.map(async (ban) => {
+                    try {
+                        const userResponse = await fetch(`http://localhost:5156/User/${ban.userId}`);
+                        if (!userResponse.ok) throw new Error(`Error fetching user ${ban.userId}`);
+
+                        const userData = await userResponse.json();
+                        return { ...ban, ...userData }; 
+                    } catch (err) {
+                        console.error(`No se pudo obtener detalles del usuario ${ban.userId}:`, err);
+                        return { ...ban, name: "Desconocido", lastName: "", mail: "" };
+                    }
+                })
+            );
+
+            setBannedAdmins(usersWithDetails);
+        } catch (error) {
+            console.error('Error fetching banned admins:', error);
+        }
+    }, []);
+
     useEffect(() => {
         fetchAdmins();
-        fetchBannedAdmins();
-    }, [fetchAdmins, fetchBannedAdmins]);
+    }, [fetchAdmins]);
 
-    
+    useEffect(() => {
+        fetchBannedAdmins();
+    }, [fetchBannedAdmins]);
+
     const handleSearchChange = (evt) => {
         setQuery(evt.target.value);
     };
@@ -73,23 +75,21 @@ const AdminList = () => {
     };
 
     const prevPage = () => {
-        if (page > 1) setPage(page - 1);
+        if (page > 1) setPage((prev) => prev - 1);
     };
 
     const nextPage = () => {
-        setPage(page + 1);
+        setPage((prev) => prev + 1);
     };
 
-    // Función para banear un administrador
+    // Banear administrador y actualizar las listas
     const banAdmin = async (userId) => {
         const requestBody = {
-            StartDateTime: new Date().toISOString(), // Fecha actual en formato ISO
-            EndDateTime: null, // Ajusta según sea necesario
-            Reason: "Violación de términos" // Ajusta el motivo según corresponda
+            StartDateTime: new Date().toISOString(),
+            EndDateTime: null,
+            Reason: "Violación de términos"
         };
-    
-        console.log("Datos enviados al backend:", requestBody); // Debug
-    
+
         try {
             const response = await fetch(`http://localhost:5156/UserBan/ban/${userId}`, {
                 method: "POST",
@@ -99,18 +99,28 @@ const AdminList = () => {
                 },
                 body: JSON.stringify(requestBody)
             });
-    
+
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`Error al banear el usuario: ${errorText}`);
             }
-    
+
             console.log(`Usuario ${userId} baneado con éxito`);
+
+            // Encontrar el usuario baneado en la lista de administradores
+            const bannedUser = users.find(user => user.id === userId);
+
+            // Actualizar listas inmediatamente sin recargar
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+
+            if (bannedUser) {
+                setBannedAdmins(prevBanned => [...prevBanned, { ...bannedUser, userId }]);
+            }
+
         } catch (error) {
             console.error("Error al banear:", error);
         }
     };
-    
 
     return (
         <div className="admin-list-container">
@@ -140,37 +150,42 @@ const AdminList = () => {
                                 <th>Nombre</th>
                                 <th>Apellido</th>
                                 <th>Email</th>
-                                <th>FechaNacimiento</th>
-                                <th>Accion</th>
+                                <th>Fecha Nacimiento</th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user, index) => (
-                                <tr key={user.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{user.name}</td>
-                                    <td>{user.lastName}</td>
-                                    <td>{user.mail}</td>
-                                    <td>{user.birthdate}</td>
-                                    <td>
-                                        <Link to={`/admin/edit/${user.id}`} className="btn-edit">Editar</Link>
-                                        <button onClick={() => banAdmin(user.id)} className="btn-ban">Banear</button> {/* Botón para banear */}
-                                    </td>
+                            {users.length > 0 ? (
+                                users.map((user, index) => (
+                                    <tr key={user.id}>
+                                        <td>{index + 1}</td>
+                                        <td>{user.name}</td>
+                                        <td>{user.lastName}</td>
+                                        <td>{user.mail}</td>
+                                        <td>{user.birthdate}</td>
+                                        <td>
+                                            <Link to={`/admin/edit/${user.id}`} className="btn-edit">Editar</Link>
+                                            <button onClick={() => banAdmin(user.id)} className="btn-ban">Banear</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6">No hay administradores.</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </Table>
                 </div>
             )}
 
             <div className="nav-buttons">
-                <button className="btn-new" onClick={prevPage}>Anterior</button>
+                <button className="btn-new" onClick={prevPage} disabled={page === 1}>Anterior</button>
                 <p>{page}</p>
                 <button className="btn-new" onClick={nextPage}>Siguiente</button>
             </div>
 
             <BannedAdminList bannedAdmins={bannedAdmins} setBannedAdmins={setBannedAdmins} setUsers={setUsers} />
-           
         </div>
     );
 };
