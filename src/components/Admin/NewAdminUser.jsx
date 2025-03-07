@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../../styles/Global.css';
 
-
-
+//
 const NewAdminUser = () => {
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
