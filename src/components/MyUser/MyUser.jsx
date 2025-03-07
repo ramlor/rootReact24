@@ -121,4 +121,3 @@ const MyUser = () => {
 };
 
 export default MyUser;
-
