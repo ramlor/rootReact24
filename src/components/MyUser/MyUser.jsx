@@ -2,38 +2,77 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 
-import './MyUser.css';
+import AdminBannedList from '../Admin/AdminBannedList'; 
 
 const MyUser = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
+    const [bannedNonAdmins, setBannedNonAdmins] = useState([]); // Actualización aquí
 
-    // Usamos useCallback para memorizar la función
-    const fetchUsers = useCallback(async () => {
+    // Obtener lista de administradores
+    const fetchAdmins = useCallback(async () => {
         setLoading(true);
         try {
             const encodedQuery = encodeURIComponent(query);
             const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=10&isAdmin=false`);
-            if (!response.ok) throw new Error('Error fetching data');
+            if (!response.ok) throw new Error('Error fetching admin users');
             const data = await response.json();
-            setUsers(data);
+            setUsers(data.data || data);
         } catch (error) {
-            console.error('Error fetching non-admin users:', error);
+            console.error('Error fetching admin users:', error);
         } finally {
             setLoading(false);
         }
     }, [query, page]);
 
-    // Llama a fetchUsers cada vez que cambian 'query' o 'page'
-    useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]); // Ahora está incluida 'fetchUsers' en las dependencias
+    // Obtener lista de usuarios baneados que NO son administradores
+    const fetchBannedNonAdmins = useCallback(async () => {
+        try {
+            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=10');
+            if (!response.ok) throw new Error('Error fetching banned users');
 
-    /*const addAdmin = (newAdmin) => {
-        setUsers((prevUsers) => [...prevUsers, newAdmin]);
-    };*/
+            const data = await response.json();
+
+            // Obtener detalles de cada usuario baneado
+            const usersWithDetails = await Promise.all(
+                data.data.map(async (ban) => {
+                    try {
+                        const userResponse = await fetch(`http://localhost:5156/User/${ban.userId}`);
+                        if (!userResponse.ok) throw new Error(`Error fetching user ${ban.userId}`);
+
+                        const userData = await userResponse.json();
+
+                        // Filtrar los usuarios que NO son administradores
+                        if (!userData.isAdmin) {
+                            return { ...ban, ...userData };
+                        } else {
+                            return null; // Excluir administradores
+                        }
+                    } catch (err) {
+                        console.error(`No se pudo obtener detalles del usuario ${ban.userId}:`, err);
+                        return null; // Manejar errores de usuario individual devolviendo null
+                    }
+                })
+            );
+
+            // Filtrar los resultados nulos (que representan a los administradores)
+            const nonAdminBannedUsers = usersWithDetails.filter(user => user !== null);
+            setBannedNonAdmins(nonAdminBannedUsers); // Actualización aquí
+        } catch (error) {
+            console.error('Error fetching banned users:', error);
+        }
+    }, []);
+
+    // Efectos secundarios para llamar a las funciones
+    useEffect(() => {
+        fetchAdmins();
+    }, [fetchAdmins]);
+
+    useEffect(() => {
+        fetchBannedNonAdmins(); // Actualización aquí
+    }, [fetchBannedNonAdmins]);
 
     const handleSearchChange = (evt) => {
         setQuery(evt.target.value);
@@ -41,38 +80,86 @@ const MyUser = () => {
 
     const handleSearchClick = () => {
         setPage(1);
-        fetchUsers();
+        fetchAdmins();
     };
 
     const prevPage = () => {
-        if (page > 1) setPage(page - 1);
+        if (page > 1) setPage((prev) => prev - 1);
     };
 
     const nextPage = () => {
-        setPage(page + 1);
+        setPage((prev) => prev + 1);
     };
 
-    // Funciones para banear y desbanear
-    const handleBanUser = (userId) => {
-        console.log(`Baneando al usuario con ID: ${userId}`);
-        // Aquí debes agregar la lógica para banear al usuario, por ejemplo, una llamada a una API
-        // Luego actualizas el estado de 'users' si es necesario
+    // Banear administrador y actualizar las listas
+    const banAdmin = async (userId) => {
+        const requestBody = {
+            StartDateTime: new Date().toISOString(),
+            EndDateTime: null,
+            Reason: "Violación de términos"
+        };
+
+        try {
+            const response = await fetch(`http://localhost:5156/UserBan/ban/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al banear el usuario: ${errorText}`);
+            }
+
+            console.log(`Usuario ${userId} baneado con éxito`);
+
+            const bannedUser = users.find(user => user.id === userId);
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+            if (bannedUser) {
+                setBannedNonAdmins(prevBanned => [...prevBanned, { ...bannedUser, userId }]); // Actualización aquí
+            }
+
+        } catch (error) {
+            console.error("Error al banear:", error);
+        }
     };
 
-    const handleUnbanUser = (userId) => {
-        console.log(`Desbaneando al usuario con ID: ${userId}`);
-        // Aquí debes agregar la lógica para desbanear al usuario, por ejemplo, una llamada a una API
-        // Luego actualizas el estado de 'users' si es necesario
+    // Desbanear administrador y actualizar las listas
+    const unbanAdmin = async (userId) => {
+        try {
+            const response = await fetch(`http://localhost:5156/UserBan/unban/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al desbanear el usuario: ${errorText}`);
+            }
+
+            console.log(`Usuario ${userId} desbaneado con éxito`);
+
+            setBannedNonAdmins(prevBanned => prevBanned.filter(ban => ban.userId !== userId)); // Actualización aquí
+        } catch (error) {
+            console.error("Error al desbanear:", error);
+        }
     };
 
     return (
-        <div className="user-list-container">
+        <div className="admin-list-container">
+            
             <div className="search-container">
                 <input
                     type="text"
                     value={query}
                     onChange={handleSearchChange}
-                    placeholder="Buscar usuario"
+                    placeholder="Buscar Usuarios"
                     className="search-input"
                 />
                 <button onClick={handleSearchClick} className="btn-search">Buscar</button>
@@ -86,36 +173,45 @@ const MyUser = () => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
                                 <th>Email</th>
-                                <th>Actions</th>
+                                <th>Fecha Nacimiento</th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user, index) => (
-                                <tr key={user.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{user.name}</td>
-                                    <td>{user.lastName}</td>
-                                    <td>{user.mail}</td>
-                                    
-                                    <td>
-                                        <button onClick={() => handleBanUser(user.id)} className="btn-ban">Ban</button>
-                                        <button onClick={() => handleUnbanUser(user.id)} className="btn-unban">Unban</button>
-                                    </td>
+                            {users.length > 0 ? (
+                                users.map((user, index) => (
+                                    <tr key={user.id}>
+                                        <td>{index + 1}</td>
+                                        <td>{user.name}</td>
+                                        <td>{user.lastName}</td>
+                                        <td>{user.mail}</td>
+                                        <td>{user.birthdate}</td>
+                                        <td>
+                                            <button onClick={() => banAdmin(user.id)} className="btn-ban">Banear</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6">No hay usuarios.</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </Table>
                 </div>
             )}
 
             <div className="nav-buttons">
-                <button className="btn-new" onClick={prevPage}>Prev</button>
+                <button className="btn-new" onClick={prevPage} disabled={page === 1}>Anterior</button>
                 <p>{page}</p>
-                <button className="btn-new" onClick={nextPage}>Next</button>
+                <button className="btn-new" onClick={nextPage}>Siguiente</button>
             </div>
+
+            {/* Mostrar lista de usuarios baneados no administradores */}
+            <AdminBannedList bannedAdmins={bannedNonAdmins} unbanAdmin={unbanAdmin} />
         </div>
     );
 };
