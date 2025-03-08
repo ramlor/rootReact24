@@ -19,7 +19,7 @@ const NavBar = () => {
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
                                 <Dropdown.Item as={Link} to="/admin/abm">AMB</Dropdown.Item>
-                                <Dropdown.Item as={Link} to="/admin/baneed">BANNED</Dropdown.Item>
+                                <Dropdown.Item as={Link} to="/admin/banned">BANNED</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
 

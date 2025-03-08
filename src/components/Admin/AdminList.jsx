@@ -107,7 +107,7 @@ const AdminList = () => {
 
             console.log(`Usuario ${userId} baneado con éxito`);
 
-            // Encontrar el usuario baneado en la lista de administradores
+            
             const bannedUser = users.find(user => user.id === userId);
 
             // Actualizar listas inmediatamente sin recargar
@@ -116,6 +116,9 @@ const AdminList = () => {
             if (bannedUser) {
                 setBannedAdmins(prevBanned => [...prevBanned, { ...bannedUser, userId }]);
             }
+
+            await fetchAdmins();
+            await fetchBannedAdmins();
 
         } catch (error) {
             console.error("Error al banear:", error);
@@ -185,7 +188,7 @@ const AdminList = () => {
                 <button className="btn-new" onClick={nextPage}>Siguiente</button>
             </div>
 
-            <BannedAdminList bannedAdmins={bannedAdmins} setBannedAdmins={setBannedAdmins} setUsers={setUsers} />
+            
         </div>
     );
 };
