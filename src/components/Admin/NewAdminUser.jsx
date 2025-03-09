@@ -37,14 +37,14 @@ const NewAdminUser = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="admin-form">
             <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" required />
             <input value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" required />
             <input value={birthdate} onChange={e => setBirthdate(e.target.value)} placeholder="Birthdate" type="date" required />
             <input value={mail} onChange={e => setMail(e.target.value)} placeholder="Email" required />
             <input value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" type="password" required />
-            <button type="submit">Crear</button>
-            <button type="button" onClick={() => navigate('/admin/ABM')}> Volver </button>
+            <button type="submit" className="submit-button">Crear</button>
+            <button type="button" onClick={() => navigate('/admin/ABM')}className="back-button"> Volver </button>
         </form>
     );
 };

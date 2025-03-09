@@ -68,7 +68,7 @@ const EditAdminUser = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}className="admin-form">
             <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" required />
             <input value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" required />
             <input value={mail} onChange={e => setMail(e.target.value)} placeholder="Email" required />
@@ -84,8 +84,8 @@ const EditAdminUser = () => {
                 placeholder="Password" 
                 type="password" 
             />
-            <button type="submit">Guardar</button>
-            <button type="button" onClick={() => navigate('/admin/ABM')}>Volver</button>
+            <button type="submit" className="submit-button">Guardar</button>
+            <button type="button" onClick={() => navigate('/admin/ABM')}className="back-button">Volver</button>
         </form>
     );
 };

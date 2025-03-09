@@ -35,8 +35,8 @@ body {
 }
 
 /* Botón de búsqueda */
-.btn-search,
-.nav-buttons .btn-new,.btn-ban,.btn-edit,
+.btn-search,.submit-button,
+.nav-buttons .btn-new,.btn-ban,.btn-edit,.back-button,
 .table td .btn, /* Estilo para los botones dentro de las filas de la tabla */
 .btn-new {
     padding: 10px 20px;
@@ -48,6 +48,23 @@ body {
     text-align: center;
     text-decoration: none; /* Sin subrayado en los botones de tipo enlace */
     display: inline-block;
+}
+.btn-search:hover,.submit-button:hover,
+.btn-new:hover,.btn-edit:hover,.btn-ban:hover,.back-button:hover,
+.nav-buttons .btn-new:hover,
+.table td .btn:hover { 
+    background-color: #353f10; /* Un color más oscuro para el hover */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+
+.btn-search:focus,.submit-button:focus,
+.btn-new:focus,
+.btn-ban:focus,.btn-edit:focus,
+.nav-buttons .btn-new:focus,.back-button:focus,
+.table td .btn:focus {
+    outline: none;
 }
 
 /* Botones de navegación */
@@ -101,26 +118,9 @@ body {
     color: #bcdb49;
 }
 
-/* Estilo al pasar el cursor sobre los botones (hover) */
-.btn-search:hover,
-.btn-new:hover,.btn-edit:hover,.btn-ban:hover,.button,
-.nav-buttons .btn-new:hover,
-.table td .btn:hover {
-    background-color: #353f10; /* Un color más oscuro para el hover */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
-}
 
-/* Eliminar el borde al enfocar el botón */
-.btn-search:focus,
-.btn-new:focus,
-.btn-ban,.btn-edit,.button,
-.nav-buttons .btn-new:focus,.button
-.table td .btn:focus {
-    outline: none;
-}
+
 input {
-    width: 80%;
     padding: 10px;
     margin-top: 100px;
     border-radius: 4px;
@@ -129,16 +129,26 @@ input {
     transition: all 0.3s ease;
 }
 
-/* Estilos cuando el input está enfocado */
+
 input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5); /* Efecto de resplandor */
-    outline: none; /* Elimina el contorno predeterminado */
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5); 
+    outline: none; 
 }
 
-/* Placeholder (texto en gris claro dentro del input) */
+
 input::placeholder {
     color: #aaa;
+}
+.admin-form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    width: 300px;
+    margin: 0 auto;
+    height: 300px; 
+    justify-content: space-between; 
 }
 
 
@@ -239,6 +249,9 @@ input::placeholder {
         font-size: 3vw; 
     }
 
+    .admin-form{
+        width: 80%;
+    }
     
       
   }
