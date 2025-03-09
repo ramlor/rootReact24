@@ -1,33 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Spinner } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
-import { Link } from 'react-router-dom';
 import '../../styles/Global.css';
 
 const AdminBannedList = () => {
     const [bans, setBans] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Función para obtener la lista de baneos
-    const fetchBans = () => {
-        fetch('http://localhost:5156/UserBan?page=1&pageSize=10')
-            .then(response => response.json())
-            .then(data => {
-                setBans(data.data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error("Error al cargar los baneos:", error);
-                setLoading(false);
-            });
+    // Función para obtener los baneos y completar con nombre y apellido
+    const fetchBans = async () => {
+        try {
+            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=10');
+            const data = await response.json();
+
+            if (data.data) {
+                const bansWithUserData = await Promise.all(
+                    data.data.map(async (ban) => {
+                        const userResponse = await fetch(`http://localhost:5156/User/${ban.userId}`);
+                        const userData = await userResponse.json();
+
+                        return {
+                            ...ban,
+                            name: userData.name,
+                            lastName: userData.lastName,
+                        };
+                    })
+                );
+
+                setBans(bansWithUserData);
+            }
+        } catch (error) {
+            console.error('Error al cargar los baneos:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    // Obtener la lista de baneos al montar el componente
     useEffect(() => {
         fetchBans();
     }, []);
 
-    // Función para desbloquear el baneo y actualizar la lista
     const unbanAdmin = (banId) => {
         fetch(`http://localhost:5156/UserBan/unlock/${banId}`, {
             method: 'PUT',
@@ -38,7 +50,6 @@ const AdminBannedList = () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Eliminamos el baneo de la lista sin recargar la página
                 setBans(prevBans => prevBans.filter(ban => ban.id !== banId));
             } else {
                 console.error("Error al desbanear:", data.message);
@@ -63,7 +74,8 @@ const AdminBannedList = () => {
                     <thead>
                         <tr>
                             <th>ID de Baneo</th>
-                            <th>ID de Usuario</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
                             <th>Razón</th>
                             <th>Acción</th>
                         </tr>
@@ -73,14 +85,11 @@ const AdminBannedList = () => {
                             bans.map((ban) => (
                                 <tr key={ban.id}>
                                     <td>{ban.id}</td>
-                                    <td>
-                                        {ban.userId}
-                                    </td>
+                                    <td>{ban.name || 'Desconocido'}</td>
+                                    <td>{ban.lastName || 'Desconocido'}</td>
                                     <td>{ban.reason}</td>
                                     <td>
-                                        <Button 
-                                            onClick={() => unbanAdmin(ban.id)}
-                                        >
+                                        <Button onClick={() => unbanAdmin(ban.id)}>
                                             Desbanear
                                         </Button>
                                     </td>
@@ -88,7 +97,7 @@ const AdminBannedList = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="4" className="text-center">
+                                <td colSpan="5" className="text-center">
                                     No hay usuarios baneados.
                                 </td>
                             </tr>
