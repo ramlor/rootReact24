@@ -122,31 +122,33 @@ const MyUser = () => {
 
     const unbanUser = async (banId) => {
         console.log("Intentando desbanear usuario con ID:", banId);
-
+    
         try {
             const response = await fetch(`http://localhost:5156/UserBan/unlock/${banId}`, {
-                method: 'PUT',  // Asegúrate de que el método sea PUT o el correcto para tu backend
+                method: 'PUT',
                 headers: {
                     'Accept': '*/*',
                 }
             });
-
+    
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`Error al desbanear el usuario: ${errorText}`);
             }
-
+    
             console.log(`Usuario ${banId} desbaneado con éxito`);
-
-            // Buscamos al usuario baneado en la lista de baneados no administradores
-            const banUser = banUser.find(ban => ban.id  === banId);
-
-            if (banUser) {
-                // Eliminamos al usuario de la lista de baneados
-                setBannedNonAdmins(prevBanned => prevBanned.filter(ban => ban.id !== banId));
-
-                // Agregamos al usuario de nuevo a la lista de usuarios activos
-                setUsers(prevUsers => [...prevUsers, banUser]);
+    
+            // Buscamos el usuario correcto usando userId
+            const bannedUser = bannedNonAdmins.find(ban => ban.userId === banId);
+    
+            if (bannedUser) {
+                // Eliminamos de la lista de baneados
+                setBannedNonAdmins(prevBanned => prevBanned.filter(ban => ban.userId !== banId));
+    
+                // Agregamos a la lista de usuarios activos
+                setUsers(prevUsers => [...prevUsers, bannedUser]);
+            } else {
+                console.warn("El usuario desbaneado no se encontró en la lista de baneados.");
             }
         } catch (error) {
             console.error("Error al desbanear:", error);
