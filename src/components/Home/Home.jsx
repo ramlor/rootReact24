@@ -11,7 +11,6 @@ export const Home = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    
 
     useEffect(() => {
         const loggedIn = localStorage.getItem('isLoggedIn');
@@ -26,11 +25,19 @@ export const Home = () => {
     const handleClose = () => setShowModal(false);
 
     const handleLogout = () => {
+        // Eliminar entradas específicas del localStorage
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('isAdmin');
         localStorage.removeItem('userId');
+
+        // Limpiar todo el localStorage (opcional)
+        // localStorage.clear();
+
+        // Actualizar el estado del componente
         setIsLoggedIn(false);
         setIsAdmin(false);
+
+        // Mostrar nuevamente el modal de inicio de sesión
         setShowModal(true);
     };
 
@@ -83,14 +90,15 @@ export const Home = () => {
             setShowModal(true); // Mostrar el modal nuevamente
         }
     };
-    
-    
 
     return (
         <div className="home-container">
+            {/* Capa de superposición para deshabilitar la interacción con la página */}
+            {showModal && <div className="overlay"></div>}
+
             {!isLoggedIn && (
-                <Modal show={showModal} onHide={handleClose}>
-                    <Modal.Header closeButton>
+                <Modal show={showModal} onHide={handleClose} backdrop="static" keyboard={false}>
+                    <Modal.Header>
                         <Modal.Title>Iniciar Sesión</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -118,7 +126,6 @@ export const Home = () => {
                                 />
                             </div>
                             <button type="submit" className="btn btn-success">Ingresar</button>
-
                         </form>
                         {error && <div className="alert alert-danger mt-3">{error}</div>}
                     </Modal.Body>
@@ -126,7 +133,7 @@ export const Home = () => {
             )}
 
             <div className="logo-container">
-                <img src="./logosinFondo.png" alt="Logo" className="logo" />
+                <img src="./logosinFondo.png" alt="Logo" className="logo img-fluid" />
             </div>
 
             <div className="login-container">
@@ -140,9 +147,10 @@ export const Home = () => {
                     <div></div>
                 )}
             </div>
-
         </div>
     );
 };
+
+
 
 

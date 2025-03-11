@@ -65,4 +65,24 @@
     }
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(120, 231, 179, 0.5);
+    z-index: 1040; 
+}
 
+
+.modal-dialog {
+    max-width: 90%;
+    width: auto;
+  }
+  
+  @media (min-width: 576px) {
+    .modal-dialog {
+      max-width: 500px;
+    }
+  }
