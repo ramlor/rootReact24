@@ -9,28 +9,30 @@ const AdminList = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
-    const [bannedAdmins, setBannedAdmins] = useState([]);
+    const [BannedAdmins, setBannedAdmins] = useState([]);
 
     // Obtener lista de administradores
     const fetchAdmins = useCallback(async () => {
         setLoading(true);
         try {
             const encodedQuery = encodeURIComponent(query);
-            const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=10&isAdmin=true`);
+            const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=5&isAdmin=true`);
             if (!response.ok) throw new Error('Error fetching admin users');
             const data = await response.json();
             setUsers(data.data || data);
+            const filteredUsers = data.data.filter(user => !BannedAdmins.some(banned => banned.userId === user.id));
+            setUsers(filteredUsers);
         } catch (error) {
             console.error('Error fetching admin users:', error);
         } finally {
             setLoading(false);
         }
-    }, [query, page]);
+    }, [query, page, BannedAdmins]);
 
     // Obtener lista de administradores baneados
     const fetchBannedAdmins = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=10');
+            const response = await fetch('http://localhost:5156/UserBan?page=1&pageSize=5');
             if (!response.ok) throw new Error('Error fetching banned admins');
 
             const data = await response.json();
@@ -115,6 +117,7 @@ const AdminList = () => {
 
             if (bannedUser) {
                 setBannedAdmins(prevBanned => [...prevBanned, { ...bannedUser, userId }]);
+                
             }
 
             await fetchAdmins();

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 
-import UserBannedList from '../MyUser/MyUserUnBannedList'; 
 
 const MyUser = () => {
     const [query, setQuery] = useState("");
@@ -213,8 +212,6 @@ const MyUser = () => {
                 <button className="btn-new" onClick={nextPage}>Siguiente</button>
             </div>
 
-            {/* Mostrar lista de usuarios baneados no administradores */}
-            <UserBannedList bannedUsers={bannedNonAdmins} unbanUser={unbanUser} />
         </div>
     );
 };
