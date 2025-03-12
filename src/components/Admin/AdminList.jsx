@@ -2,14 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 import { Link } from 'react-router-dom';
-import BannedAdminList from './AdminBannedList';
 
+// Componente principal AdminList
 const AdminList = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
-    const [BannedAdmins, setBannedAdmins] = useState([]);
+    const [bannedAdmins, setBannedAdmins] = useState([]);
 
     // Obtener lista de administradores
     const fetchAdmins = useCallback(async () => {
@@ -19,15 +19,15 @@ const AdminList = () => {
             const response = await fetch(`http://localhost:5156/User?query=${encodedQuery}&page=${page}&pageSize=5&isAdmin=true`);
             if (!response.ok) throw new Error('Error fetching admin users');
             const data = await response.json();
-            setUsers(data.data || data);
-            const filteredUsers = data.data.filter(user => !BannedAdmins.some(banned => banned.userId === user.id));
-            setUsers(filteredUsers);
+
+            setUsers(data.data || data);  // Se actualiza la lista completa de usuarios
+
         } catch (error) {
             console.error('Error fetching admin users:', error);
         } finally {
             setLoading(false);
         }
-    }, [query, page, BannedAdmins]);
+    }, [query, page]);
 
     // Obtener lista de administradores baneados
     const fetchBannedAdmins = useCallback(async () => {
@@ -59,6 +59,10 @@ const AdminList = () => {
         }
     }, []);
 
+    // Filtrar usuarios que no estén baneados
+    const filteredUsers = users.filter(user => !bannedAdmins.some(banned => banned.userId === user.id));
+
+    // Efecto para cargar administradores y administradores baneados
     useEffect(() => {
         fetchAdmins();
     }, [fetchAdmins]);
@@ -67,21 +71,24 @@ const AdminList = () => {
         fetchBannedAdmins();
     }, [fetchBannedAdmins]);
 
+    // Manejar cambios en la búsqueda
     const handleSearchChange = (evt) => {
         setQuery(evt.target.value);
     };
 
+    // Iniciar una nueva búsqueda
     const handleSearchClick = () => {
         setPage(1);
         fetchAdmins();
     };
 
+    // Cambiar página
     const prevPage = () => {
-        if (page > 1) setPage((prev) => prev - 1);
+        if (page > 1) setPage(prev => prev - 1);
     };
 
     const nextPage = () => {
-        setPage((prev) => prev + 1);
+        setPage(prev => prev + 1);
     };
 
     // Banear administrador y actualizar las listas
@@ -109,17 +116,16 @@ const AdminList = () => {
 
             console.log(`Usuario ${userId} baneado con éxito`);
 
-            
-            const bannedUser = users.find(user => user.id === userId);
-
-            // Actualizar listas inmediatamente sin recargar
+            // Actualizar la lista de administradores eliminando el baneado
             setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
 
+            // Agregar el usuario baneado a la lista de baneados
+            const bannedUser = users.find(user => user.id === userId);
             if (bannedUser) {
                 setBannedAdmins(prevBanned => [...prevBanned, { ...bannedUser, userId }]);
-                
             }
 
+            // Refrescar las listas de administradores y baneados
             await fetchAdmins();
             await fetchBannedAdmins();
 
@@ -161,8 +167,8 @@ const AdminList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.length > 0 ? (
-                                users.map((user, index) => (
+                            {filteredUsers.length > 0 ? (
+                                filteredUsers.map((user, index) => (
                                     <tr key={user.id}>
                                         <td>{index + 1}</td>
                                         <td>{user.name}</td>
@@ -190,10 +196,10 @@ const AdminList = () => {
                 <p>{page}</p>
                 <button className="btn-new" onClick={nextPage}>Siguiente</button>
             </div>
-
-            
         </div>
     );
 };
 
 export default AdminList;
+
+
