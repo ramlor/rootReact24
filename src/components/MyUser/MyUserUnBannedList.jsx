@@ -1,4 +1,5 @@
 import { Table } from 'react-bootstrap';
+import '../../styles/Global.css';
 
 const UserBannedList = ({ bannedUsers, unbanUser }) => {
     
