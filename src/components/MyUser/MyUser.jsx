@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, Modal, Button, Form } from 'react-bootstrap';
 import { ImSpinner3 } from 'react-icons/im';
 
 
@@ -9,6 +9,8 @@ const MyUser = () => {
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
     const [bannedNonAdmins, setBannedNonAdmins] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [banDetails, setBanDetails] = useState({ userId: null, reason: "", endDate: "" });
 
     const fetchAdmins = useCallback(async () => {
         setLoading(true);
@@ -84,11 +86,23 @@ const MyUser = () => {
         setPage((prev) => prev + 1);
     };
 
-    const banUser = async (userId) => {
+    const handleBanClick = (userId) => {
+        setBanDetails({ userId, reason: "", endDate: "" });
+        setShowModal(true);
+    };
+
+    const banUser = async () => {
+        const { userId, reason, endDate } = banDetails;
+        
+        if (!reason || !endDate) {
+            alert("Por favor, complete todos los campos.");
+            return;
+        }
+
         const requestBody = {
             StartDateTime: new Date().toISOString(),
-            EndDateTime: null,
-            Reason: "Violación de términos"
+            EndDateTime: new Date(endDate).toISOString(),
+            Reason: reason
         };
 
         try {
@@ -107,52 +121,13 @@ const MyUser = () => {
             }
 
             console.log(`Usuario ${userId} baneado con éxito`);
-
-            const banUser = users.find(user => user.id === userId);
             setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-            if (banUser) {
-                setBannedNonAdmins(prevBanned => [...prevBanned, banUser]);
-            }
-
+            setShowModal(false);
         } catch (error) {
             console.error("Error al banear:", error);
         }
     };
 
-    const unbanUser = async (banId) => {
-        console.log("Intentando desbanear usuario con ID:", banId);
-    
-        try {
-            const response = await fetch(`http://localhost:5156/UserBan/unlock/${banId}`, {
-                method: 'PUT',
-                headers: {
-                    'Accept': '*/*',
-                }
-            });
-    
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Error al desbanear el usuario: ${errorText}`);
-            }
-    
-            console.log(`Usuario ${banId} desbaneado con éxito`);
-    
-            // Buscamos el usuario correcto usando userId
-            const bannedUser = bannedNonAdmins.find(ban => ban.userId === banId);
-    
-            if (bannedUser) {
-                // Eliminamos de la lista de baneados
-                setBannedNonAdmins(prevBanned => prevBanned.filter(ban => ban.userId !== banId));
-    
-                // Agregamos a la lista de usuarios activos
-                setUsers(prevUsers => [...prevUsers, bannedUser]);
-            } else {
-                console.warn("El usuario desbaneado no se encontró en la lista de baneados.");
-            }
-        } catch (error) {
-            console.error("Error al desbanear:", error);
-        }
-    };
 
     return (
         <div className="admin-list-container">
@@ -192,7 +167,7 @@ const MyUser = () => {
                                         <td>{user.mail}</td>
                                         <td>{user.birthdate}</td>
                                         <td>
-                                            <button onClick={() => banUser(user.id)} className="btn-ban">Banear</button>
+                                            <button onClick={() => handleBanClick(user.id)} className="btn-ban">Banear</button>
                                         </td>
                                     </tr>
                                 ))
@@ -212,6 +187,41 @@ const MyUser = () => {
                 <button className="btn-new" onClick={nextPage}>Siguiente</button>
             </div>
 
+            {/* Modal para banear usuario */}
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Banear Usuario</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group>
+                            <Form.Label>Razón del Baneo</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={banDetails.reason}
+                                onChange={(e) => setBanDetails({ ...banDetails, reason: e.target.value })}
+                                placeholder="Ingresa la razón"
+                            />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Fecha de Fin del Baneo</Form.Label>
+                            <Form.Control
+                                type="date"
+                                value={banDetails.endDate}
+                                onChange={(e) => setBanDetails({ ...banDetails, endDate: e.target.value })}
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cerrar
+                    </Button>
+                    <Button variant="primary" onClick={banUser}>
+                        Confirmar Baneo
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
